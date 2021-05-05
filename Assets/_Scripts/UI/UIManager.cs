@@ -9,6 +9,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform bombLayout;
     [SerializeField] private Button bombButtonPrefab;
 
+    [SerializeField] private GameObject clearButton;
+    [SerializeField] private GameObject retryButton;
+
     
     private void Awake()
     {
@@ -37,8 +40,22 @@ public class UIManager : MonoBehaviour
         PlacementManager.Instance.InitiateSequence();
     }
 
-    public void RestartLevel()
+    public void RetryLevel()
+    {
+        PlacementManager.Instance.LoadPreviousPlacement();
+    }
+    public void ClearLevel()
     {
         SceneManager.LoadScene(0);
+    }
+    public void ShowClearButton()
+    {
+        clearButton.SetActive(true);
+        retryButton.SetActive(false);
+    }
+    public void ShowRetryButton()
+    {
+        clearButton.SetActive(false);
+        retryButton.SetActive(true);
     }
 }

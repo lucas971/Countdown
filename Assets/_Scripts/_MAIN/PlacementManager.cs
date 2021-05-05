@@ -11,6 +11,8 @@ public class PlacementManager : MonoBehaviour
     [SerializeField] private float mouseScrollCooldown = .1f;
 
     private List<Bomb> placedBombs;
+    private Dictionary<BoomObject, Vector3> boomObjects;
+
     private Bomb currentBomb = null;
     private int currentTimer;
     private float mouseScrollTimer;
@@ -22,6 +24,7 @@ public class PlacementManager : MonoBehaviour
             Destroy(this);
         Instance = this;
         placedBombs = new List<Bomb>();
+        boomObjects = new Dictionary<BoomObject, Vector3>();
         currentTimer = 1;
         mouseScrollTimer = 0f;
     }
@@ -29,6 +32,10 @@ public class PlacementManager : MonoBehaviour
     private void Start()
     {
         sequenceStarted = false;
+        foreach (BoomObject boomObject in FindObjectsOfType<BoomObject>())
+        {
+            boomObjects[boomObject] = boomObject.transform.position;
+        }
         for (int i = 0; i < numberToPlace; i++)
             UIManager.Instance.LayoutAddBomb();
     }
@@ -54,6 +61,8 @@ public class PlacementManager : MonoBehaviour
     }
     public void SelectBomb()
     {
+        if (sequenceStarted)
+            return;
         currentBomb = Instantiate(bombToPlace);
         currentBomb.SetTimer(currentTimer);
         currentBomb.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -114,5 +123,25 @@ public class PlacementManager : MonoBehaviour
         sequenceStarted = true;
         foreach (Bomb b in placedBombs)
             b.InitiateSequence();
+
+        UIManager.Instance.ShowRetryButton();
     }
+
+    public void LoadPreviousPlacement()
+    {
+        foreach (var boomObject in boomObjects)
+        {
+            boomObject.Key.transform.position = boomObject.Value;
+            boomObject.Key.transform.rotation = Quaternion.identity;
+            boomObject.Key.Stop();
+        }
+        foreach (Bomb b in placedBombs)
+        {
+            b.Reset();
+        }
+        sequenceStarted = false;
+
+        UIManager.Instance.ShowClearButton();
+    }
+
 }

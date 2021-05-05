@@ -9,7 +9,7 @@ public class LoseTrigger : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            SceneManager.LoadScene(0);
+            PlacementManager.Instance.LoadPreviousPlacement();
         }
     }
 }

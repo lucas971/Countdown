@@ -12,6 +12,7 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float bombDragSpeed;
 
 
+    private int runtimeTimer;
     private bool started = false;
     private bool placed = false;
     private Vector3 mousePosition;
@@ -30,11 +31,14 @@ public class Bomb : MonoBehaviour
     public void InitiateSequence()
     {
         started = true;
+        chrono = 0f;
+        runtimeTimer = timer;
     }
 
     public void SetTimer(int timer)
     {
         this.timer = timer;
+        runtimeTimer = timer;
         UpdateTimerText();
     }
 
@@ -53,13 +57,12 @@ public class Bomb : MonoBehaviour
         if (chrono >= 1)
         {
             chrono = 0;
-            timer--;
+            runtimeTimer--;
             UpdateTimerText();
-            if (timer == 0)
+            if (runtimeTimer == 0)
                 Explode();
         }
     }
-
     private void Explode()
     {
         foreach (BoomObject boomObject in BoomManager.Instance.GetObjectsInExplosion((Vector2)transform.position, impactRadius))
@@ -67,11 +70,19 @@ public class Bomb : MonoBehaviour
             Vector2 dir = boomObject.transform.position - transform.position;
             boomObject.Boom(dir.normalized * force );
         }
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
-    
+
+    public void Reset()
+    {
+        started = false;
+        gameObject.SetActive(true);
+        runtimeTimer = timer;
+        UpdateTimerText();
+
+    }
     private void UpdateTimerText()
     {
-        countdown.text = timer.ToString();
+        countdown.text = runtimeTimer.ToString();
     }
 }

@@ -18,6 +18,12 @@ public class BoomObject : MonoBehaviour
         BoomManager.Instance.AddBoomObject(this);
     }
 
+    public void Stop()
+    {
+        rb.velocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+    }
+
     public void Boom(Vector2 boomVector)
     {
         rb.AddForce(boomVector);
