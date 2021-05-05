@@ -7,7 +7,6 @@ public class WinTrigger : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject.layer);
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             Debug.Log("Win !");

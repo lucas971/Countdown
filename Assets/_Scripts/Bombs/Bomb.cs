@@ -9,21 +9,52 @@ public class Bomb : MonoBehaviour
     [Range(0,10)]
     [SerializeField] private int timer;
     [SerializeField] private TMPro.TextMeshPro countdown;
+    [SerializeField] private float bombDragSpeed;
 
+
+    private bool started = false;
+    private bool placed = false;
+    private Vector3 mousePosition;
     private float chrono;
     private void Start()
     {
         chrono = 0f;
-        countdown.text = timer.ToString();
+        UpdateTimerText();
     }
+
+    public void Place()
+    {
+        placed = true;
+    }
+
+    public void InitiateSequence()
+    {
+        started = true;
+    }
+
+    public void SetTimer(int timer)
+    {
+        this.timer = timer;
+        UpdateTimerText();
+    }
+
     private void Update()
     {
+        if (!placed)
+        {
+            mousePosition = Input.mousePosition;
+            mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+            transform.position = Vector2.Lerp(transform.position, mousePosition + Vector3.down, bombDragSpeed);
+        }
+        if (!started)
+            return;
+
         chrono += Time.deltaTime;
         if (chrono >= 1)
         {
             chrono = 0;
             timer--;
-            countdown.text = timer.ToString();
+            UpdateTimerText();
             if (timer == 0)
                 Explode();
         }
@@ -34,8 +65,13 @@ public class Bomb : MonoBehaviour
         foreach (BoomObject boomObject in BoomManager.Instance.GetObjectsInExplosion((Vector2)transform.position, impactRadius))
         {
             Vector2 dir = boomObject.transform.position - transform.position;
-            boomObject.Boom(dir * force);
+            boomObject.Boom(dir.normalized * force );
         }
         Destroy(gameObject);
+    }
+    
+    private void UpdateTimerText()
+    {
+        countdown.text = timer.ToString();
     }
 }
