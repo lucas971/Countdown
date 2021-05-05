@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1346877384}
   - component: {fileID: 5543836681328461878}
   - component: {fileID: 811269295621358461}
+  - component: {fileID: 9164671393313699926}
   m_Layer: 6
   m_Name: Bomb
   m_TagString: Untagged
@@ -124,6 +125,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &9164671393313699926
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835408966523880325}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.27629066}
+  serializedVersion: 2
+  m_Radius: 2.0014167
 --- !u!1 &4415704296226085182
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +151,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5934479664906735539}
   - component: {fileID: 2382935097861979885}
-  - component: {fileID: 4009375654453432518}
   m_Layer: 0
   m_Name: Radius
   m_TagString: Untagged
@@ -207,22 +223,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &4009375654453432518
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4415704296226085182}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 2.56
 --- !u!1 &6464309089050975326
 GameObject:
   m_ObjectHideFlags: 0

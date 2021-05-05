@@ -12,11 +12,19 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float bombDragSpeed;
 
 
+    private List<BoomObject> inRadius;
+    private BoomObject boomObjectTry;
     private int runtimeTimer;
     private bool started = false;
     private bool placed = false;
     private Vector3 mousePosition;
     private float chrono;
+
+    private void Awake()
+    {
+        inRadius = new List<BoomObject>();
+    }
+
     private void Start()
     {
         chrono = 0f;
@@ -26,6 +34,24 @@ public class Bomb : MonoBehaviour
     public void Place()
     {
         placed = true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.gameObject.TryGetComponent<BoomObject>(out boomObjectTry))
+        {
+            if (!inRadius.Contains(boomObjectTry))
+                inRadius.Add(boomObjectTry);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.transform.gameObject.TryGetComponent<BoomObject>(out boomObjectTry))
+        {
+            if (inRadius.Contains(boomObjectTry))
+                inRadius.Remove(boomObjectTry);
+        }
     }
 
     public void InitiateSequence()
@@ -65,7 +91,7 @@ public class Bomb : MonoBehaviour
     }
     private void Explode()
     {
-        foreach (BoomObject boomObject in BoomManager.Instance.GetObjectsInExplosion((Vector2)transform.position, impactRadius))
+        foreach (BoomObject boomObject in inRadius)
         {
             Vector2 dir = boomObject.transform.position - transform.position;
             boomObject.Boom(dir.normalized * force );

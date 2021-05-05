@@ -6,6 +6,8 @@ using UnityEngine;
 public class BoomObject : MonoBehaviour
 {
     [SerializeField] private float torqueMultiplier = 1f;
+    private Vector3 initialPosition;
+    private Quaternion initialRotation;
     private Rigidbody2D rb;
     
     private void Awake()
@@ -13,15 +15,18 @@ public class BoomObject : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void Start()
+    private void Start()
     {
-        BoomManager.Instance.AddBoomObject(this);
+        initialPosition = transform.position;
+        initialRotation = transform.rotation;
     }
 
     public void Stop()
     {
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0f;
+        transform.position = initialPosition;
+        transform.rotation = initialRotation;
     }
 
     public void Boom(Vector2 boomVector)

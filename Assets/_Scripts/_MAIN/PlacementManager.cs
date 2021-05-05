@@ -11,7 +11,7 @@ public class PlacementManager : MonoBehaviour
     [SerializeField] private float mouseScrollCooldown = .1f;
 
     private List<Bomb> placedBombs;
-    private Dictionary<BoomObject, Vector3> boomObjects;
+    private List<BoomObject> boomObjects;
 
     private Bomb currentBomb = null;
     private int currentTimer;
@@ -24,7 +24,7 @@ public class PlacementManager : MonoBehaviour
             Destroy(this);
         Instance = this;
         placedBombs = new List<Bomb>();
-        boomObjects = new Dictionary<BoomObject, Vector3>();
+        boomObjects = new List<BoomObject>();
         currentTimer = 1;
         mouseScrollTimer = 0f;
     }
@@ -34,7 +34,7 @@ public class PlacementManager : MonoBehaviour
         sequenceStarted = false;
         foreach (BoomObject boomObject in FindObjectsOfType<BoomObject>())
         {
-            boomObjects[boomObject] = boomObject.transform.position;
+            boomObjects.Add(boomObject);
         }
         for (int i = 0; i < numberToPlace; i++)
             UIManager.Instance.LayoutAddBomb();
@@ -131,9 +131,7 @@ public class PlacementManager : MonoBehaviour
     {
         foreach (var boomObject in boomObjects)
         {
-            boomObject.Key.transform.position = boomObject.Value;
-            boomObject.Key.transform.rotation = Quaternion.identity;
-            boomObject.Key.Stop();
+            boomObject.Stop();
         }
         foreach (Bomb b in placedBombs)
         {
