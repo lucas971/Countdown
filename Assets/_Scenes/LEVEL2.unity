@@ -197,7 +197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2031881905519622624, guid: 4182bf40d01048e44b08bf0dcadcf67f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.87
+      value: 1.17
       objectReference: {fileID: 0}
     - target: {fileID: 2031881905519622624, guid: 4182bf40d01048e44b08bf0dcadcf67f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -334,7 +334,7 @@ GameObject:
   m_Component:
   - component: {fileID: 847224119}
   - component: {fileID: 847224120}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
