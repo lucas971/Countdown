@@ -933,10 +933,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d6a128944011a64587e9d01f1dece50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bombLayout: {fileID: 3748634831198584676}
-  bombButtonPrefab: {fileID: 8495379293520316079, guid: 88ff05582971325478f2ea984add5f4d, type: 3}
-  clearButton: {fileID: 4478914574265542214}
-  retryButton: {fileID: 3748634832822018968}
+  BombLayout: {fileID: 3748634831198584676}
+  BombButtonPrefab: {fileID: 8495379293520316079, guid: 88ff05582971325478f2ea984add5f4d, type: 3}
+  ClearButton: {fileID: 4478914574265542214}
+  RetryButton: {fileID: 3748634832822018968}
 --- !u!1 &4478914574265542214
 GameObject:
   m_ObjectHideFlags: 0

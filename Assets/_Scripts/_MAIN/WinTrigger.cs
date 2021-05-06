@@ -9,7 +9,6 @@ public class WinTrigger : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            Debug.Log("Win !");
             SceneManager.LoadScene(1);
         }
     }

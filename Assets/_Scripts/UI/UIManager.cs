@@ -6,30 +6,41 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
-    [SerializeField] private Transform bombLayout;
-    [SerializeField] private Button bombButtonPrefab;
 
-    [SerializeField] private GameObject clearButton;
-    [SerializeField] private GameObject retryButton;
+    #region EDITOR FIELDS
+    [Header("Bomb")]
+    [SerializeField] private Transform BombLayout;
+    [SerializeField] private Button BombButtonPrefab;
 
-    
+    [Space]
+    [Header("Buttons")]
+    [SerializeField] private GameObject ClearButton;
+    [SerializeField] private GameObject RetryButton;
+    #endregion
+
+    #region INITIALIZATION
     private void Awake()
     {
         if (Instance != null)
             Destroy(this);
         Instance = this;
     }
+    #endregion
+
+    #region BOMB LAYOUT
     public void LayoutAddBomb()
     {
-        Button newButton = Instantiate(bombButtonPrefab, bombLayout);
+        Button newButton = Instantiate(BombButtonPrefab, BombLayout);
         newButton.onClick.AddListener(SelectBomb);
     }
 
     public void LayoutRemoveBomb()
     {
-        Destroy(bombLayout.GetChild(0).gameObject);
+        Destroy(BombLayout.GetChild(0).gameObject);
     }
+    #endregion
 
+    #region BUTTONS METHODS
     public void SelectBomb()
     {
         PlacementManager.Instance.SelectBomb();
@@ -48,14 +59,18 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+    #endregion
+
+    #region BUTTONS CHANGE
     public void ShowClearButton()
     {
-        clearButton.SetActive(true);
-        retryButton.SetActive(false);
+        ClearButton.SetActive(true);
+        RetryButton.SetActive(false);
     }
     public void ShowRetryButton()
     {
-        clearButton.SetActive(false);
-        retryButton.SetActive(true);
+        ClearButton.SetActive(false);
+        RetryButton.SetActive(true);
     }
+    #endregion
 }
