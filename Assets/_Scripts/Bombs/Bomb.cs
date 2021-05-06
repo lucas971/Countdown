@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
+    #region CONSTS
+    private const float gridSize = .5f;
+    #endregion
     #region EDITOR FIELDS
     [Header("Explosion")]
     [SerializeField] private float ExplosionForce;
@@ -36,6 +39,8 @@ public class Bomb : MonoBehaviour
     //State
     private bool started = false;
     private bool placed = false;
+    private bool colliderBlock = false;
+    private int inBombMask = 0;
     #endregion
 
     #region INITIALIZATION
@@ -68,8 +73,13 @@ public class Bomb : MonoBehaviour
 
         else
         {
+            if (collision.gameObject.layer == LayerMask.NameToLayer("BombMask"))
+            {
+                inBombMask++;
+                return;
+            }
+            colliderBlock = true;
             inCollision++;
-            spriteRenderer.color = Color.red;
         }
 
     }
@@ -87,17 +97,37 @@ public class Bomb : MonoBehaviour
         }
         else
         {
+            if (collision.gameObject.layer == LayerMask.NameToLayer("BombMask"))
+            {
+                inBombMask--;
+                return;
+            }
             inCollision--;
             if (inCollision == 0)
-                spriteRenderer.color = Color.white;
+            {
+                colliderBlock = false;
+            }
         }
     }
     #endregion
 
     #region PLACEMENT
+
+    private void SnapToGrid(Vector2 posToSnap)
+    {
+        float snappedX;
+        float snappedY;
+
+        int xDiv = (int)(posToSnap.x / gridSize);
+        int yDiv = (int)(posToSnap.y / gridSize);
+
+        snappedX = xDiv * gridSize;
+        snappedY = yDiv * gridSize;
+        transform.position = new Vector3(snappedX, snappedY, 0);
+    }
     public bool Place()
     {
-        if (inCollision == 0)
+        if (!colliderBlock && inBombMask>0)
         {
             placed = true;
             return true;
@@ -130,10 +160,19 @@ public class Bomb : MonoBehaviour
     #region UPDATE
     private void Update()
     {
+        if (!placed && !started && !colliderBlock && inBombMask > 0)
+        {
+            spriteRenderer.color = Color.white;
+        }
+        else if (colliderBlock || inBombMask <= 0)
+        {
+            spriteRenderer.color = Color.red;
+        }
         if (!placed)
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            transform.position = Vector2.Lerp(transform.position, mousePosition + Vector3.down, CursorDragSpeed);
+            //transform.position = Vector2.Lerp(transform.position, mousePosition + Vector3.down, CursorDragSpeed);
+            SnapToGrid(mousePosition);
         }
         if (!started)
             return;

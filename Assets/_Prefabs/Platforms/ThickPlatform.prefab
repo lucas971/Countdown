@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3628492458137387222}
   - component: {fileID: 5161956289771881572}
   - component: {fileID: 3757291268069646339}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ThickPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}

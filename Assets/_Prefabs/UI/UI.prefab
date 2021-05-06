@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2786872015879789549}
   - component: {fileID: 6793338753151370388}
   - component: {fileID: 3872199660899423994}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BombLayoutTube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 5462530065298972369}
   - component: {fileID: 3156446787706907070}
   - component: {fileID: 14399038377103064}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3748634831198584676}
   - component: {fileID: 3748634831198584677}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Layout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 3748634831275520391}
   - component: {fileID: 3748634831275520385}
   - component: {fileID: 3748634831275520384}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BombLayoutContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +306,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.15, y: 0}
   m_AnchorMax: {x: 0.85, y: 0.25}
-  m_AnchoredPosition: {x: 0, y: -5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3748634831275520385
@@ -359,7 +359,7 @@ GameObject:
   - component: {fileID: 3748634832143421759}
   - component: {fileID: 3748634832143421758}
   - component: {fileID: 3748634832143421757}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -407,7 +407,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
+  m_SortingLayerID: -2020820109
   m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!114 &3748634832143421758
@@ -459,7 +459,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3748634832156447490}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -499,7 +499,7 @@ GameObject:
   - component: {fileID: 3748634832200016400}
   - component: {fileID: 3748634832200016402}
   - component: {fileID: 3748634832200016401}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -636,7 +636,7 @@ GameObject:
   - component: {fileID: 3748634832820805998}
   - component: {fileID: 3748634832820805997}
   - component: {fileID: 3748634832820805996}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: GO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -768,7 +768,7 @@ GameObject:
   - component: {fileID: 3748634832822018964}
   - component: {fileID: 3748634832822018971}
   - component: {fileID: 3748634832822018970}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Retry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -899,7 +899,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3748634832920475827}
   - component: {fileID: 6713399688801732021}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -949,7 +949,7 @@ GameObject:
   - component: {fileID: 8023475356266958632}
   - component: {fileID: 249783238681334092}
   - component: {fileID: 2012731994183399567}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Clear
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1081,7 +1081,7 @@ GameObject:
   - component: {fileID: 8259647988214754382}
   - component: {fileID: 3516755251403400614}
   - component: {fileID: 3630128957527287827}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1105,7 +1105,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3516755251403400614
 CanvasRenderer:

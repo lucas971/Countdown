@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 1721502411}
   - component: {fileID: 8500558932133596793}
   - component: {fileID: 5810731320521307321}
-  m_Layer: 0
-  m_Name: StaticObstacle
+  m_Layer: 8
+  m_Name: FallThrough
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
