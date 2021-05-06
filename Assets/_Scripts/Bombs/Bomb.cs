@@ -5,12 +5,14 @@ using UnityEngine;
 public class Bomb : MonoBehaviour
 {
     #region CONSTS
-    private const float gridSize = .5f;
+    public const float gridSize = .5f;
     #endregion
+
     #region EDITOR FIELDS
     [Header("Explosion")]
     [SerializeField] private float ExplosionForce;
-    [SerializeField] private Collider2D ExplosionCollider;
+    [SerializeField] private float ExplosionRadius;
+    [SerializeField] private LayerMask BoomObjectMask;
 
     [Space]
     [Header("Coutdown")]
@@ -19,7 +21,6 @@ public class Bomb : MonoBehaviour
     [Space]
     [Header("Placement")]
     [SerializeField] private float CursorDragSpeed;
-    [SerializeField] private Collider2D BodyCollider;
     #endregion
 
     #region COMPONENTS
@@ -47,7 +48,7 @@ public class Bomb : MonoBehaviour
     private void Awake()
     {
         inRadius = new List<BoomObject>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = transform.GetChild(2).GetComponent<SpriteRenderer>();
     }
 
     private void Start()
@@ -140,19 +141,15 @@ public class Bomb : MonoBehaviour
         started = true;
         chrono = 0f;
         timer = timerBackup;
-        BodyCollider.enabled = false;
-        ExplosionCollider.enabled = true;
+        inRadius.Clear();
     }
 
     public void Reset()
     {
-        BodyCollider.enabled = true;
-        ExplosionCollider.enabled = false;
         started = false;
         gameObject.SetActive(true);
         timer = timerBackup;
         UpdateTimerText();
-
     }
 
     #endregion
@@ -192,11 +189,20 @@ public class Bomb : MonoBehaviour
     #region EXPLOSION
     private void Explode()
     {
+        BoomObject b;
+        foreach (RaycastHit2D hit in Physics2D.CircleCastAll(transform.position, ExplosionRadius, Vector2.zero, 0, BoomObjectMask))
+        {
+            hit.transform.TryGetComponent<BoomObject>(out b);
+            if (b)
+                inRadius.Add(b);
+        }
         foreach (BoomObject boomObject in inRadius)
         {
             Vector2 dir = boomObject.transform.position - transform.position;
             boomObject.Boom(dir.normalized * ExplosionForce );
         }
+
+        inRadius.Clear();
         gameObject.SetActive(false);
     }
     #endregion
