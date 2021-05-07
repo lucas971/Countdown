@@ -1,8 +1,9 @@
-#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 public static class BombTester
 {
     static float radius = .65f;
@@ -12,6 +13,7 @@ public static class BombTester
     static bool toggled = false;
     static double timer;
 
+    #if UNITY_EDITOR
     [MenuItem("Bombs/Test Bombs _g")]
     public static void Toggle()
     {
@@ -36,6 +38,8 @@ public static class BombTester
             TestAllPos();
         }
     }
+    #endif
+
     public static void TestAllPos()
     {
         Vector3 toTest = Vector3.zero;
@@ -73,4 +77,3 @@ public static class BombTester
         return res;
     }
 }
-#endif
