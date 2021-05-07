@@ -95,7 +95,7 @@ public class BoomObject : MonoBehaviour
     #region UPDATE
     private void Update()
     {
-        if (!started)
+        if (!started || Helper == null)
             return;
 
         chrono += Time.deltaTime;
@@ -105,11 +105,13 @@ public class BoomObject : MonoBehaviour
             currentTime++;
             if (lastHelper && Vector3.Distance(transform.position, lastHelper.transform.position) <= HelpersThreshold)
             {
-                lastHelper.Setup(currentTime);
+                lastHelper.AddFork(currentTime);
                 return;
             }
+
             if (Vector3.Distance(transform.position, initialPosition) < HelpersThreshold)
                 return;
+
             TrajectoryHelper helperGo = Instantiate(Helper, transform);
             helperGo.transform.SetParent(null);
             helperGo.transform.rotation = Quaternion.identity;
@@ -123,6 +125,7 @@ public class BoomObject : MonoBehaviour
     #region BOOM
     public void Boom(Vector2 boomVector)
     {
+        rb.velocity = rb.velocity / 4f;
         rb.AddForce(boomVector);
         float torque = Vector2.Angle(boomVector, Vector2.up) * TorqueMultiplier;
         rb.AddTorque(torque);

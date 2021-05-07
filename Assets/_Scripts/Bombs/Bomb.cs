@@ -9,10 +9,14 @@ public class Bomb : MonoBehaviour
     #endregion
 
     #region EDITOR FIELDS
-    [Header("Explosion")]
+    [Header("Physics")]
     [SerializeField] private float ExplosionForce;
     [SerializeField] private float ExplosionRadius;
     [SerializeField] private LayerMask BoomObjectMask;
+
+    [Space]
+    [Header("Vfxs")]
+    [SerializeField] private GameObject ExplosionVFX;
 
     [Space]
     [Header("Coutdown")]
@@ -203,6 +207,10 @@ public class Bomb : MonoBehaviour
         }
 
         inRadius.Clear();
+        GameObject vfx = Instantiate(ExplosionVFX);
+        vfx.transform.position = transform.position;
+        Destroy(vfx, .5f);
+
         gameObject.SetActive(false);
     }
     #endregion
