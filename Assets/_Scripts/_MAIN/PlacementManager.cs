@@ -90,17 +90,11 @@ public class PlacementManager : MonoBehaviour
         currentBomb.SetTimer(currentTimer);
         currentBomb.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        //Hide cursor
-        currentBomb.ShowCursorVisuals(true);
-        CursorManager.Instance.HideCursor();
 
     }
 
     private void UnSelectBomb()
     {
-        //Hide cursor
-        CursorManager.Instance.ShowCursor();
-
         //Remove it from the list of placed bombs
         placedBombs.Remove(currentBomb);
 
@@ -117,13 +111,10 @@ public class PlacementManager : MonoBehaviour
         //Add it to the list of placed bombs
         placedBombs.Add(currentBomb);
 
-        currentBomb.ShowCursorVisuals(false);
 
         //Unselect it
         currentBomb = null;
 
-        //Show cursor
-        CursorManager.Instance.ShowCursor();
 
         //Remove it from the UI Layout
         UIManager.Instance.LayoutRemoveBomb();
@@ -143,10 +134,6 @@ public class PlacementManager : MonoBehaviour
 
             //Destroy the bomb in the scene
             Destroy(b.gameObject);
-
-            //Show cursor
-            b.ShowCursorVisuals(false);
-            CursorManager.Instance.ShowCursor();
 
             //Add a new bomb to th UI Layout
             UIManager.Instance.LayoutAddBomb();

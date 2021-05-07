@@ -6,14 +6,13 @@ using UnityEditor;
 public static class BombTester
 {
     static float radius = .65f;
-    static int xSize = 70;
+    static int xSize = 75;
     static int ySize = 35;
     static float cooldown = .1f;
     static bool toggled = false;
     static double timer;
-    #if UNITY_EDITOR
+
     [MenuItem("Bombs/Test Bombs _g")]
-    #endif
     public static void Toggle()
     {
         if (toggled)
@@ -56,7 +55,7 @@ public static class BombTester
     }
 
     static RaycastHit2D[] hits;
-    static bool TestPos(Vector2 pos)
+    public static bool TestPos(Vector2 pos)
     {
         bool res = false;
         hits = Physics2D.CircleCastAll(pos, radius, Vector2.zero, 0);

@@ -35,7 +35,7 @@ public class Bomb : MonoBehaviour
     #region PRIVATE VARIABLES
     //Collider detection
     private List<BoomObject> inRadius;
-    private int inCollision;
+    private Vector2 mousePosition;
 
     //Timer
     private int timerBackup;
@@ -45,8 +45,7 @@ public class Bomb : MonoBehaviour
     //State
     private bool started = false;
     private bool placed = false;
-    private bool colliderBlock = false;
-    private int inBombMask = 0;
+    private bool placable = false;
     #endregion
 
     #region INITIALIZATION
@@ -58,82 +57,29 @@ public class Bomb : MonoBehaviour
 
     private void Start()
     {
-        inCollision = 0;
         chrono = 0f;
         UpdateTimerText();
     }
     #endregion
 
-    #region TRIGGER
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (started)
-        {
-            BoomObject boomObjectTry;
-            if (collision.transform.gameObject.TryGetComponent<BoomObject>(out boomObjectTry))
-            {
-                if (!inRadius.Contains(boomObjectTry))
-                    inRadius.Add(boomObjectTry);
-            }
-        }
-
-        else
-        {
-            if (collision.gameObject.layer == LayerMask.NameToLayer("BombMask"))
-            {
-                inBombMask++;
-                return;
-            }
-            colliderBlock = true;
-            inCollision++;
-        }
-
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (started)
-        {
-            BoomObject boomObjectTry;
-            if (collision.transform.gameObject.TryGetComponent<BoomObject>(out boomObjectTry))
-            {
-                if (inRadius.Contains(boomObjectTry))
-                    inRadius.Remove(boomObjectTry);
-            }
-        }
-        else
-        {
-            if (collision.gameObject.layer == LayerMask.NameToLayer("BombMask"))
-            {
-                inBombMask--;
-                return;
-            }
-            inCollision--;
-            if (inCollision == 0)
-            {
-                colliderBlock = false;
-            }
-        }
-    }
-    #endregion
-
     #region PLACEMENT
 
-    private void SnapToGrid(Vector2 posToSnap)
+    private Vector2 SnapToGrid(Vector2 posToSnap)
     {
         float snappedX;
         float snappedY;
 
-        int xDiv = (int)(posToSnap.x / gridSize);
-        int yDiv = (int)(posToSnap.y / gridSize);
+        int xDiv = (int)(posToSnap.x / gridSize) - 1;
+        int yDiv = (int)(posToSnap.y / gridSize) - 1;
 
         snappedX = xDiv * gridSize;
         snappedY = yDiv * gridSize;
-        transform.position = new Vector3(snappedX, snappedY, 0);
+
+        return new Vector2(snappedX, snappedY);
     }
     public bool Place()
     {
-        if (!colliderBlock && inBombMask>0)
+        if (placable)
         {
             placed = true;
             return true;
@@ -165,22 +111,21 @@ public class Bomb : MonoBehaviour
         CursorVisuals.SetActive(show);
     }
     #endregion
+
     #region UPDATE
     private void Update()
     {
-        if (!placed && !started && !colliderBlock && inBombMask > 0)
+        if (!placed && !started)
         {
-            spriteRenderer.color = Color.white;
-        }
-        else if (colliderBlock || inBombMask <= 0)
-        {
-            spriteRenderer.color = Color.red;
-        }
-        if (!placed)
-        {
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //transform.position = Vector2.Lerp(transform.position, mousePosition + Vector3.down, CursorDragSpeed);
-            SnapToGrid(mousePosition);
+            mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            placable = BombTester.TestPos(SnapToGrid(mousePosition));
+            
+            if (placable)
+                spriteRenderer.color = Color.white;
+            else
+                spriteRenderer.color = Color.red;
+
+            transform.position = SnapToGrid(mousePosition);
         }
         if (!started)
             return;
