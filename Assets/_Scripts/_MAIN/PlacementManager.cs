@@ -210,5 +210,21 @@ public class PlacementManager : MonoBehaviour
         //Replace the RETRY button with the CLEAR button
         UIManager.Instance.ShowClearButton();
     }
+
+    public void Clear()
+    {
+        //Stop the Bombs
+        while (placedBombs.Count > 0)
+        {
+            Bomb b = placedBombs[0];
+            placedBombs.Remove(b);
+
+            //Destroy the bomb in the scene
+            Destroy(b.gameObject);
+
+            //Add a new bomb to th UI Layout
+            UIManager.Instance.LayoutAddBomb();
+        }
+    }
     #endregion
 }

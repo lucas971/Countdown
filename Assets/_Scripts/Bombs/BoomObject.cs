@@ -131,4 +131,11 @@ public class BoomObject : MonoBehaviour
         rb.AddTorque(torque);
     }
     #endregion
+
+    #region MECHANISMS
+    public void Bouncer(float strength)
+    {
+        rb.velocity *= strength;
+    }
+    #endregion
 }

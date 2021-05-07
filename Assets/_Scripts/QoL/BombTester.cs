@@ -1,9 +1,8 @@
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 public static class BombTester
 {
     static float radius = .65f;
@@ -75,3 +74,4 @@ public static class BombTester
         return res;
     }
 }
+#endif

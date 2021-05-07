@@ -57,6 +57,11 @@ public class UIManager : MonoBehaviour
     }
     public void ClearLevel()
     {
+        PlacementManager.Instance.Clear();
+    }
+
+    public void MainMenu()
+    {
         SceneManager.LoadScene(0);
     }
     #endregion
