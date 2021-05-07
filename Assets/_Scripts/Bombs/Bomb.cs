@@ -25,6 +25,7 @@ public class Bomb : MonoBehaviour
     [Space]
     [Header("Placement")]
     [SerializeField] private float CursorDragSpeed;
+    [SerializeField] private GameObject CursorVisuals;
     #endregion
 
     #region COMPONENTS
@@ -158,6 +159,12 @@ public class Bomb : MonoBehaviour
 
     #endregion
 
+    #region CURSOR
+    public void ShowCursorVisuals(bool show)
+    {
+        CursorVisuals.SetActive(show);
+    }
+    #endregion
     #region UPDATE
     private void Update()
     {

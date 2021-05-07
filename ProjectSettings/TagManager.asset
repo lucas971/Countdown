@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Cursor
   layers:
   - Default
   - TransparentFX
@@ -52,4 +53,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 2274147187
+    locked: 0
+  - name: Cursor
+    uniqueID: 3942503005
     locked: 0
