@@ -18,6 +18,7 @@ public class PlacementManager : MonoBehaviour
     private List<Bomb> placedBombs;
     private List<BoomObject> boomObjects;
     private Bomb currentBomb = null;
+    private Vector2 gravityBackup;
     private int currentTimer;
     private float mouseScrollTimer;
 
@@ -46,6 +47,8 @@ public class PlacementManager : MonoBehaviour
     private void Start()
     {
         //INITIALIZE VARIABLES
+        gravityBackup = Physics2D.gravity;
+        Physics2D.gravity = Vector2.zero;
         currentTimer = 1;
         mouseScrollTimer = 0f;
         sequenceStarted = false;
@@ -201,9 +204,11 @@ public class PlacementManager : MonoBehaviour
         return true;
     }
     #endregion
+
     #region EXPLOSION SEQUENCE
     public void InitiateSequence()
     {
+        Physics2D.gravity = gravityBackup;
         //If a bomb is held while pressing the detonation button, unselect it.
         if (currentBomb)
             UnSelectBomb();
@@ -227,6 +232,7 @@ public class PlacementManager : MonoBehaviour
     #region LOAD PREVIOUS SETUP
     public void LoadPreviousPlacement()
     {
+        Physics2D.gravity = Vector2.zero;
         //Stop the started state
         sequenceStarted = false;
 

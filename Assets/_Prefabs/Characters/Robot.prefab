@@ -71,6 +71,7 @@ MonoBehaviour:
   Helper: {fileID: 2120158476481694758, guid: 68a05b3284df8bf43b91a5fe1c87633c, type: 3}
   HelpersThreshold: 0.8
   TorqueMultiplier: 1
+  MaxAngularVelocity: 300
 --- !u!212 &7866556887204625641
 SpriteRenderer:
   m_ObjectHideFlags: 0

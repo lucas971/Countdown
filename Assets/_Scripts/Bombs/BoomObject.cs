@@ -13,6 +13,7 @@ public class BoomObject : MonoBehaviour
     [Space]
     [Header("Physics")]
     [SerializeField] private float TorqueMultiplier = 1f;
+    [SerializeField] private float MaxAngularVelocity = 20f;
     #endregion
 
     #region COMPONENTS
@@ -167,4 +168,10 @@ public class BoomObject : MonoBehaviour
         PlacementManager.Instance.LoadPreviousPlacement();
     }
     #endregion
+
+    private void FixedUpdate()
+    {
+        if (rb.angularVelocity > MaxAngularVelocity)
+            rb.angularVelocity = MaxAngularVelocity;
+    }
 }
