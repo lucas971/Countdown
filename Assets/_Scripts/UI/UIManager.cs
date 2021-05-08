@@ -16,6 +16,9 @@ public class UIManager : MonoBehaviour
     [Header("Buttons")]
     [SerializeField] private GameObject ClearButton;
     [SerializeField] private GameObject RetryButton;
+    [SerializeField] private GameObject PlayButton;
+    [SerializeField] private GameObject LayoutContainer;
+    [SerializeField] private GameObject Pipe;
     #endregion
 
     #region PRIVATE PARAMETERS
@@ -60,11 +63,17 @@ public class UIManager : MonoBehaviour
 
     public void InitiateSequence()
     {
+        PlayButton.SetActive(false);
+        LayoutContainer.SetActive(false);
+        Pipe.SetActive(false);
         PlacementManager.Instance.InitiateSequence();
     }
 
     public void RetryLevel()
     {
+        PlayButton.SetActive(true);
+        LayoutContainer.SetActive(true);
+        Pipe.SetActive(true);
         PlacementManager.Instance.LoadPreviousPlacement();
     }
     public void ClearLevel()
@@ -74,6 +83,7 @@ public class UIManager : MonoBehaviour
 
     public void MainMenu()
     {
+        PlacementManager.Instance.Stop();
         SceneManager.LoadScene(0);
     }
     #endregion

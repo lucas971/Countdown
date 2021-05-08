@@ -275,4 +275,11 @@ public class PlacementManager : MonoBehaviour
         }
     }
     #endregion
+
+    #region STOP
+    public void Stop()
+    {
+        Physics2D.gravity = gravityBackup;
+    }
+    #endregion
 }

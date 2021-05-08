@@ -924,8 +924,8 @@ RectTransform:
   m_Father: {fileID: 3748634832156447490}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.03, y: 0.04}
-  m_AnchorMax: {x: 0.15, y: 0.12}
+  m_AnchorMin: {x: 0.45, y: 0.04}
+  m_AnchorMax: {x: 0.55, y: 0.12}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1071,6 +1071,9 @@ MonoBehaviour:
   BombButtonPrefab: {fileID: 8495379293520316079, guid: 88ff05582971325478f2ea984add5f4d, type: 3}
   ClearButton: {fileID: 4478914574265542214}
   RetryButton: {fileID: 3748634832822018968}
+  PlayButton: {fileID: 3748634832820805906}
+  LayoutContainer: {fileID: 3748634831275520390}
+  Pipe: {fileID: 89065545703356679}
 --- !u!1 &4478914574265542214
 GameObject:
   m_ObjectHideFlags: 0

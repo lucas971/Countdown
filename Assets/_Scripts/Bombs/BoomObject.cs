@@ -165,7 +165,7 @@ public class BoomObject : MonoBehaviour
     #region DEATH
     public virtual void Death()
     {
-        PlacementManager.Instance.LoadPreviousPlacement();
+        UIManager.Instance.RetryLevel();
     }
     #endregion
 
