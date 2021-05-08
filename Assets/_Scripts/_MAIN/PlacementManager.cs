@@ -8,16 +8,13 @@ public class PlacementManager : MonoBehaviour
 
     #region EDITOR FIELDS
     [Header("Bombs")]
-    [SerializeField] private Bomb BombPrefab;
-    [SerializeField] private int BombsToPlace;
+    [SerializeField] private Transform BombContainer;
     [SerializeField] private LayerMask BombLayerMask;
-
-    [Space]
-    [Header("Input")]
-    [SerializeField] private float MouseScrollCooldown = .1f;
     #endregion
 
+    #region PRIVATE VARIABLES
     //BOMBS
+    private List<Bomb> bombs;
     private List<Bomb> placedBombs;
     private List<BoomObject> boomObjects;
     private Bomb currentBomb = null;
@@ -26,6 +23,7 @@ public class PlacementManager : MonoBehaviour
 
     //STATES
     private bool sequenceStarted;
+    #endregion
 
     #region INITIALIZATION
     private void Awake()
@@ -33,6 +31,14 @@ public class PlacementManager : MonoBehaviour
         if (Instance != null)
             Destroy(this);
         Instance = this;
+
+        bombs = new List<Bomb>();
+        for (int i = 0; i < BombContainer.childCount; i++)
+        {
+            bombs.Add(BombContainer.GetChild(i).GetComponent<Bomb>());
+            BombContainer.GetChild(i).gameObject.SetActive(false);
+        }
+
         placedBombs = new List<Bomb>();
         boomObjects = new List<BoomObject>();
     }
@@ -51,8 +57,8 @@ public class PlacementManager : MonoBehaviour
         }
 
         //Fill the UI horizontal layout with bombs icons.
-        for (int i = 0; i < BombsToPlace; i++)
-            UIManager.Instance.LayoutAddBomb();
+        for (int i = 0; i < bombs.Count; i++)
+            UIManager.Instance.LayoutAddBomb(i, bombs[i].Icon);
     }
     #endregion
 
@@ -62,44 +68,44 @@ public class PlacementManager : MonoBehaviour
         if (sequenceStarted)
             return;
 
-        if (Input.mouseScrollDelta.y != 0 && currentBomb && Time.time > mouseScrollTimer)
-            IncrementTimer((int)Input.mouseScrollDelta.y);
-
         else if (Input.GetMouseButtonDown(0) && currentBomb)
             PlaceBomb();
         else if (Input.GetMouseButtonDown(0))
-            MoveBomb();
+            CheckClick();
         
         else if (Input.GetMouseButtonDown(1) && !currentBomb)
-            UnPlaceBomb();
+            RemoveBomb();
         else if (Input.GetMouseButtonDown(1))
             UnSelectBomb();
-
     }
     #endregion
 
     #region BOMB MANIPULATION
-    public void SelectBomb()
+    public void SelectBomb(int which)
     {
         //Prevent from selecting a bomb while the sequence is running.
         if (sequenceStarted)
             return;
 
         //Create a bomb at the cursor's position.
-        currentBomb = Instantiate(BombPrefab);
-        currentBomb.SetTimer(currentTimer);
-        currentBomb.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-
+        currentBomb = bombs[which];
+        currentBomb.gameObject.SetActive(true);
+        currentBomb.transform.position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
     private void UnSelectBomb()
     {
-        //Remove it from the list of placed bombs
-        placedBombs.Remove(currentBomb);
+        //Hide it
+        currentBomb.gameObject.SetActive(false);
 
-        //Destroy it
-        Destroy(currentBomb.gameObject);
+        //Reset its timer
+        currentBomb.ResetTimer();
+
+        //Ungrey it
+        UIManager.Instance.LayoutUnGreyBomb(bombs.IndexOf(currentBomb));
+
+        //Unselect it
+        currentBomb = null;
     }
 
     private void PlaceBomb()
@@ -111,16 +117,14 @@ public class PlacementManager : MonoBehaviour
         //Add it to the list of placed bombs
         placedBombs.Add(currentBomb);
 
+        //Grey it
+        UIManager.Instance.LayoutGreyBomb(bombs.IndexOf(currentBomb));
 
         //Unselect it
         currentBomb = null;
-
-
-        //Remove it from the UI Layout
-        UIManager.Instance.LayoutRemoveBomb();
     }
 
-    private void UnPlaceBomb()
+    private void RemoveBomb()
     {
         //Check if there is a bomb at the cursor position
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, BombLayerMask);
@@ -132,47 +136,71 @@ public class PlacementManager : MonoBehaviour
             //Remove the bomb from the placed bombs list
             placedBombs.Remove(b);
 
-            //Destroy the bomb in the scene
-            Destroy(b.gameObject);
+            //Unplace the bomb
+            b.UnPlace();
 
-            //Add a new bomb to th UI Layout
-            UIManager.Instance.LayoutAddBomb();
+            //Reset its timer
+            b.ResetTimer();
+
+            //UnGrey it
+            UIManager.Instance.LayoutUnGreyBomb(bombs.IndexOf(b));
+
+            //Destroy the bomb in the scene
+            b.gameObject.SetActive(false);
+
         }
     }
 
-    private void MoveBomb()
+    private void CheckClick()
     {
         //Check if there is a bomb at the cursor position
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, BombLayerMask);
         if (hit)
         {
             //Get the bomb component
-            Bomb b = hit.collider.gameObject.GetComponent<Bomb>();
+            Bomb b;
+            hit.collider.gameObject.TryGetComponent(out b);
+            if (b) //If this is the bomb body, move the bomb
+                MoveBomb(b);
 
-            //Remove the bomb from the placed bombs list
-            placedBombs.Remove(b);
-
-            //Destroy the bomb in the scene
-            Destroy(b.gameObject);
-
-            //Add a new bomb to th UI Layout
-            UIManager.Instance.LayoutAddBomb();
-
-            //Spawn a new bomb at the previous bomb location
-            SelectBomb();
+            //Else get the timer component
+            TimerButton timer;
+            hit.collider.gameObject.TryGetComponent(out timer);
+            if (timer) //If this is a timer, activate it
+                UseTimer(timer);
         }
     }
-    
 
-    private void IncrementTimer(int value) //TODO : CHANGE WITH BUTTONS ON THE BOMB
+    private void MoveBomb(Bomb b)
     {
-        mouseScrollTimer = Time.time + MouseScrollCooldown;
-        currentTimer += value;
-        currentTimer = Mathf.Max(1, currentTimer);
-        currentBomb.SetTimer(currentTimer);
+        //Remove the bomb from the placed bombs list
+        placedBombs.Remove(b);
+
+        //Unplace the bomb
+        b.UnPlace();
+
+        //Set the bomb as the current held bomb
+        currentBomb = b;
+    }
+
+    private void UseTimer(TimerButton timer)
+    {
+        timer.Use();
     }
     #endregion
 
+    #region BOMB RADIUS CHECK
+    public bool CheckBomb(Bomb b)
+    {
+        foreach (Bomb other in placedBombs)
+        {
+            float dist = Vector2.Distance(b.transform.position, other.transform.position);
+            if (dist < b.ExplosionRadius + other.ExplosionRadius)
+                return false;
+        }
+        return true;
+    }
+    #endregion
     #region EXPLOSION SEQUENCE
     public void InitiateSequence()
     {
@@ -223,14 +251,21 @@ public class PlacementManager : MonoBehaviour
         //Stop the Bombs
         while (placedBombs.Count > 0)
         {
+            //Select the first bomb in the list
             Bomb b = placedBombs[0];
+
+            //Remove the bomb from the list
             placedBombs.Remove(b);
 
-            //Destroy the bomb in the scene
-            Destroy(b.gameObject);
+            //Unplace the bomb
+            b.UnPlace();
+            b.ResetTimer();
 
-            //Add a new bomb to th UI Layout
-            UIManager.Instance.LayoutAddBomb();
+            //UnGrey it
+            UIManager.Instance.LayoutUnGreyBomb(bombs.IndexOf(b));
+
+            //Destroy the bomb in the scene
+            b.gameObject.SetActive(false);
         }
     }
     #endregion

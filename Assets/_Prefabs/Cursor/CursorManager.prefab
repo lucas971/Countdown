@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CursorPrefab: {fileID: 7880279436744703572, guid: 66f12eabf355874448cf0d023df0aa06, type: 3}
+  Offset: {x: 0.5, y: -0.5}

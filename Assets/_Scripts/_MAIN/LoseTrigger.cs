@@ -7,9 +7,10 @@ public class LoseTrigger : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        BoomObject b;
+        if (collision.gameObject.TryGetComponent(out b))
         {
-            PlacementManager.Instance.LoadPreviousPlacement();
+            b.Death();
         }
     }
 }

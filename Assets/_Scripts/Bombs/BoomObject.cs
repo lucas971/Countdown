@@ -133,9 +133,38 @@ public class BoomObject : MonoBehaviour
     #endregion
 
     #region MECHANISMS
+    public void Freeze(float time)
+    {
+        StartCoroutine(FreezeRoutine(time));
+    }
+
+    IEnumerator FreezeRoutine(float time)
+    {
+        float torqueAfterFreeze = rb.angularVelocity / 4;
+        RigidbodyConstraints2D backupConstraints = rb.constraints;
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+
+        float t = 0f;
+        while (t < time && started)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        rb.constraints = backupConstraints;
+        rb.velocity = Vector2.down;
+        rb.angularVelocity = torqueAfterFreeze;
+    }
     public void Bouncer(float strength)
     {
         rb.velocity *= strength;
+    }
+    #endregion
+
+    #region DEATH
+    public virtual void Death()
+    {
+        PlacementManager.Instance.LoadPreviousPlacement();
     }
     #endregion
 }

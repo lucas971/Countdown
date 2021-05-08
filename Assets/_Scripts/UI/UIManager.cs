@@ -18,32 +18,44 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject RetryButton;
     #endregion
 
+    #region PRIVATE PARAMETERS
+    private List<Image> buttonImages;
+    #endregion
+
     #region INITIALIZATION
     private void Awake()
     {
         if (Instance != null)
             Destroy(this);
         Instance = this;
+        buttonImages = new List<Image>();
     }
     #endregion
 
     #region BOMB LAYOUT
-    public void LayoutAddBomb()
+    public void LayoutAddBomb(int index, Sprite sprite)
     {
         Button newButton = Instantiate(BombButtonPrefab, BombLayout);
-        newButton.onClick.AddListener(SelectBomb);
+        newButton.onClick.AddListener(delegate { SelectBomb(index); });
+        newButton.image.sprite = sprite;
+        buttonImages.Add(newButton.image);
     }
 
-    public void LayoutRemoveBomb()
+    public void LayoutGreyBomb(int index)
     {
-        Destroy(BombLayout.GetChild(0).gameObject);
+        buttonImages[index].color = Color.gray;
+    }
+
+    public void LayoutUnGreyBomb(int index)
+    {
+        buttonImages[index].color = Color.white;
     }
     #endregion
 
     #region BUTTONS METHODS
-    public void SelectBomb()
+    public void SelectBomb(int which)
     {
-        PlacementManager.Instance.SelectBomb();
+        PlacementManager.Instance.SelectBomb(which);
     }
 
     public void InitiateSequence()

@@ -59,17 +59,19 @@ public static class BombTester
     }
 
     static RaycastHit2D[] hits;
-    public static bool TestPos(Vector2 pos)
+    public static bool TestPos(Vector2 pos, GameObject ToIgnore = null)
     {
         bool res = false;
         hits = Physics2D.CircleCastAll(pos, radius, Vector2.zero, 0);
         foreach (var hit in hits)
         {
+            if (hit.transform.gameObject == ToIgnore)
+                continue;
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("BombMask"))
             {
                 res = true;
             }
-            else if (hit.transform.gameObject.layer == 8 || hit.transform.gameObject.layer == 3)
+            else if (hit.transform.gameObject.layer == 8 || hit.transform.gameObject.layer == 3 || hit.transform.gameObject.layer == 6)
             {
                 return false;
             }

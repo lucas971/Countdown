@@ -10,61 +10,58 @@ public class Bomb : MonoBehaviour
 
     #region EDITOR FIELDS
     [Header("Physics")]
-    [SerializeField] private float ExplosionForce;
-    [SerializeField] private float ExplosionRadius;
-    [SerializeField] private LayerMask BoomObjectMask;
+    [SerializeField] protected float ExplosionForce;
+    [SerializeField] public float ExplosionRadius;
+    [SerializeField] protected LayerMask BoomObjectMask;
 
     [Space]
     [Header("Vfxs")]
-    [SerializeField] private GameObject ExplosionVFX;
+    [SerializeField] protected GameObject ExplosionVFX;
 
     [Space]
     [Header("Coutdown")]
-    [SerializeField] private TMPro.TextMeshPro CountdownText;
+    [SerializeField] protected TMPro.TextMeshPro CountdownText;
 
     [Space]
     [Header("Placement")]
-    [SerializeField] private float CursorDragSpeed;
-    [SerializeField] private GameObject CursorVisuals;
+    [SerializeField] protected float CursorDragSpeed;
+    [SerializeField] protected GameObject CursorVisuals;
+    [SerializeField] public Sprite Icon;
     #endregion
 
     #region COMPONENTS
-    private SpriteRenderer spriteRenderer;
+    protected SpriteRenderer spriteRenderer;
     #endregion
 
-    #region PRIVATE VARIABLES
+    #region PROTECTED VARIABLES
     //Collider detection
-    private List<BoomObject> inRadius;
-    private Vector2 mousePosition;
+    protected List<BoomObject> inRadius;
+    protected Vector2 mousePosition;
+    protected Color placeableColor;
 
     //Timer
-    private int timerBackup;
-    private int timer;
-    private float chrono;
+    protected int timerBackup;
+    protected int timer;
+    protected float chrono;
 
     //State
-    private bool started = false;
-    private bool placed = false;
-    private bool placable = false;
+    protected bool started = false;
+    protected bool placed = false;
+    protected bool placable = false;
     #endregion
 
     #region INITIALIZATION
-    private void Awake()
+    protected void Awake()
     {
         inRadius = new List<BoomObject>();
         spriteRenderer = transform.GetChild(2).GetComponent<SpriteRenderer>();
-    }
-
-    private void Start()
-    {
-        chrono = 0f;
-        UpdateTimerText();
+        placeableColor = spriteRenderer.color;
     }
     #endregion
 
     #region PLACEMENT
 
-    private Vector2 SnapToGrid(Vector2 posToSnap)
+    protected Vector2 SnapToGrid(Vector2 posToSnap)
     {
         float snappedX;
         float snappedY;
@@ -92,15 +89,23 @@ public class Bomb : MonoBehaviour
         started = true;
         chrono = 0f;
         timer = timerBackup;
-        inRadius.Clear();
+
+        if (timer == 0)
+            Explode();
     }
 
     public void Reset()
     {
+
         started = false;
         gameObject.SetActive(true);
         timer = timerBackup;
         UpdateTimerText();
+    }
+
+    public void UnPlace()
+    {
+        placed = false;
     }
 
     #endregion
@@ -113,17 +118,17 @@ public class Bomb : MonoBehaviour
     #endregion
 
     #region UPDATE
-    private void Update()
+    protected void Update()
     {
         if (!placed && !started)
         {
             mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            placable = BombTester.TestPos(SnapToGrid(mousePosition));
-            
+            placable = PlacementManager.Instance.CheckBomb(this) && BombTester.TestPos(SnapToGrid(mousePosition), gameObject);
+
             if (placable)
-                spriteRenderer.color = Color.white;
+                spriteRenderer.color = placeableColor;
             else
-                spriteRenderer.color = Color.red;
+                spriteRenderer.color = placeableColor + new Color(0, 0, 0, -.8f);
 
             transform.position = SnapToGrid(mousePosition);
         }
@@ -143,7 +148,7 @@ public class Bomb : MonoBehaviour
     #endregion
 
     #region EXPLOSION
-    private void Explode()
+    protected virtual void Explode()
     {
         BoomObject b;
         foreach (RaycastHit2D hit in Physics2D.CircleCastAll(transform.position, ExplosionRadius, Vector2.zero, 0, BoomObjectMask))
@@ -168,15 +173,35 @@ public class Bomb : MonoBehaviour
     #endregion
 
     #region COUNTDOWN
-    private void UpdateTimerText()
+    protected void UpdateTimerText()
     {
         CountdownText.text = timer.ToString();
     }
 
-    public void SetTimer(int newTimer)
+    public void ResetTimer()
     {
-        timerBackup = newTimer;
-        timer = newTimer;
+        timerBackup = timer = 0;
+        UpdateTimerText();
+    }
+
+    public bool AllowTimerChange()
+    {
+        return placed;
+    }
+
+    public void AddTimer()
+    {
+        timerBackup++;
+        timer++;
+        UpdateTimerText();
+    }
+
+    public void ReduceTimer()
+    {
+        if (timer == 0)
+            return;
+        timerBackup--;
+        timer--;
         UpdateTimerText();
     }
     #endregion
