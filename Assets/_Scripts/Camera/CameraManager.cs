@@ -17,9 +17,11 @@ public class CameraManager : MonoBehaviour
 
     #region PRIVATE PARAMETERS
     //STATES
+    private bool PanningAnimation = false;
     private bool IsPanning = false;
     private bool IsZooming = false;
     private bool LockZoomUp = false;
+    private bool FollowPlayer = false;
 
     //MOUSE
     private Vector2 lastPos;
@@ -30,6 +32,9 @@ public class CameraManager : MonoBehaviour
     private float cameraMinY;
     private float cameraMaxX;
     private float cameraMaxY;
+
+    //PLAYER
+    private Transform player;
     #endregion
 
     #region INITIALIZATION
@@ -39,15 +44,26 @@ public class CameraManager : MonoBehaviour
             Destroy(this);
 
         Instance = this;
+        CorrectCameraBounds();
+    }
+
+    private void Start()
+    {
+        if (CanPan)
+        {
+            player = GameObject.FindGameObjectWithTag("Player").transform;
+            IsPanning = true;
+            PanningAnimation = true;
+            StartCoroutine(PanAnimation());
+        }
     }
     #endregion
 
     #region PUBLIC METHODS
-    public bool AllowScale()
+    public bool OverrideInputs()
     {
-        return CanScale;
+        return (IsPanning || IsZooming);
     }
-
     public bool AllowPan()
     {
         return CanPan;
@@ -61,6 +77,8 @@ public class CameraManager : MonoBehaviour
 
     public void RequestZoom(float value)
     {
+        if (!CanScale)
+            return;
         if (IsZooming)
             return;
         if (value > 0 && Camera.main.orthographicSize == _MinCameraSize)
@@ -72,15 +90,36 @@ public class CameraManager : MonoBehaviour
         IsZooming = true;
         StartCoroutine(Zoom(value < 0));
     }
+
+    public void InitiateSequence()
+    {
+        if (CanPan)
+            FollowPlayer = true;
+
+    }
+
+    public void StopSequence()
+    {
+        if (CanPan)
+        {
+            FollowPlayer = false;
+            FollowPlayerUpdate();
+        }
+    }
     #endregion
 
     #region UPDATE
     private void Update()
     {
-        if (IsPanning)
+        if (IsPanning && !PanningAnimation)
         {
             PanningUpdate();
         }
+        if (FollowPlayer)
+        {
+            FollowPlayerUpdate();
+        }
+        
     }
     #endregion
 
@@ -102,6 +141,42 @@ public class CameraManager : MonoBehaviour
         //Stop the panning sequence
         if (Input.GetMouseButtonUp(0))
             IsPanning = false;
+    }
+
+    private void FollowPlayerUpdate()
+    {
+        Camera.main.transform.position = player.transform.position + Vector3.forward * Camera.main.transform.position.z;
+        CorrectCameraBounds();
+    }
+    private IEnumerator PanAnimation()
+    {
+        Transform panTargets = transform.Find("PAN_ANIMATION");
+        if (!panTargets || panTargets.childCount < 2)
+            yield break;
+
+        Camera.main.transform.position = panTargets.GetChild(0).position + Vector3.forward * Camera.main.transform.position.z; ;
+        CorrectCameraBounds();
+        
+
+        for (int i = 1; i < panTargets.childCount; i++)
+        {
+            Transform panTarget = panTargets.GetChild(i);
+            Vector2 currentDir = panTarget.position - Camera.main.transform.position;
+            Vector2 lastDir = panTarget.position - Camera.main.transform.position;
+            while (Vector3.Dot(lastDir, currentDir) > 0)
+            {
+                Camera.main.transform.position += (Vector3)currentDir.normalized  * Time.deltaTime * _PanningSpeed;
+                lastDir = currentDir;
+                CorrectCameraBounds();
+                currentDir = panTarget.position - Camera.main.transform.position;
+                if (currentDir == lastDir)
+                    break;
+
+                yield return null;
+            }
+        }
+        IsPanning = false;
+        PanningAnimation = false;
     }
     #endregion
 

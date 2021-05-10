@@ -56,13 +56,14 @@ public class PlacementManager : MonoBehaviour
         //Fill the UI horizontal layout with bombs icons.
         for (int i = 0; i < bombs.Count; i++)
             UIManager.Instance.LayoutAddBomb(i, bombs[i].Icon);
+
     }
     #endregion
 
     #region UPDATE
     private void Update()
     {
-        if (sequenceStarted)
+        if (sequenceStarted || CameraManager.Instance.OverrideInputs())
             return;
 
         //Check if a zoom is requested
@@ -87,7 +88,7 @@ public class PlacementManager : MonoBehaviour
     public void SelectBomb(int which)
     {
         //Prevent from selecting a bomb while the sequence is running.
-        if (sequenceStarted || currentBomb)
+        if (sequenceStarted || currentBomb || CameraManager.Instance.OverrideInputs())
             return;
 
         //Create a bomb at the cursor's position.
@@ -223,6 +224,7 @@ public class PlacementManager : MonoBehaviour
     #region EXPLOSION SEQUENCE
     public void InitiateSequence()
     {
+        CameraManager.Instance.InitiateSequence();
         Physics2D.gravity = gravityBackup;
         //If a bomb is held while pressing the detonation button, unselect it.
         if (currentBomb)
@@ -265,6 +267,8 @@ public class PlacementManager : MonoBehaviour
 
         //Replace the RETRY button with the CLEAR button
         UIManager.Instance.ShowClearButton();
+
+        CameraManager.Instance.StopSequence();
     }
 
     public void Clear()

@@ -844,8 +844,8 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 300, y: 300}
   m_Spacing: {x: 100, y: 100}
-  m_Constraint: 1
-  m_ConstraintCount: 4
+  m_Constraint: 2
+  m_ConstraintCount: 2
 --- !u!1 &1336280975
 GameObject:
   m_ObjectHideFlags: 0
@@ -1343,6 +1343,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 086c2a8d5c2de04429c4cbcfcd4d67d4, type: 2}
   - {fileID: 11400000, guid: de23747ca5108704cbb8a6b50245f791, type: 2}
   - {fileID: 11400000, guid: 3bf11bd70d5e5b7408b9a89da24c3f0f, type: 2}
+  - {fileID: 11400000, guid: 0c83cda0bdfeaed43b6b01748aada941, type: 2}
 --- !u!4 &1598007985
 Transform:
   m_ObjectHideFlags: 0
