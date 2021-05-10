@@ -57,7 +57,7 @@ MonoBehaviour:
   BoomObjectMask:
     serializedVersion: 2
     m_Bits: 8
-  ExplosionVFX: {fileID: 4153967173990242850, guid: b3305d1efb1ad4b4b85bdec4b3499597, type: 3}
+  ExplosionVFX: {fileID: 7683409433530686847, guid: eb0daa4a3c8711548b2729f58a609f60, type: 3}
   CountdownText: {fileID: 8889820764176212052}
   CursorDragSpeed: 0.1
   CursorVisuals: {fileID: 3512476904344739609}
@@ -404,8 +404,8 @@ SpriteRenderer:
   m_SortingLayerID: -511502333
   m_SortingLayer: 1
   m_SortingOrder: 4
-  m_Sprite: {fileID: 21300000, guid: 2dac2d767489a8843ac4e5b84c606956, type: 3}
-  m_Color: {r: 1, g: 0, b: 0.0743804, a: 1}
+  m_Sprite: {fileID: 21300000, guid: fc0fce3b3ef28d642b30de16be744533, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

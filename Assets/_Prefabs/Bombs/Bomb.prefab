@@ -57,7 +57,7 @@ MonoBehaviour:
   BoomObjectMask:
     serializedVersion: 2
     m_Bits: 8
-  ExplosionVFX: {fileID: 4153967173990242850, guid: b3305d1efb1ad4b4b85bdec4b3499597, type: 3}
+  ExplosionVFX: {fileID: 7683409433530686847, guid: eb0daa4a3c8711548b2729f58a609f60, type: 3}
   CountdownText: {fileID: 8889820764176212052}
   CursorDragSpeed: 0.1
   CursorVisuals: {fileID: 3512476904344739609}
