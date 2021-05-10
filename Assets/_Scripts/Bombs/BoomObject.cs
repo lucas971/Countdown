@@ -160,6 +160,11 @@ public class BoomObject : MonoBehaviour
     {
         rb.velocity *= strength;
     }
+
+    public void Attractor(Vector2 attraction)
+    {
+        rb.AddForce(attraction);
+    }
     #endregion
 
     #region DEATH

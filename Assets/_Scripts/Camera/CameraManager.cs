@@ -73,6 +73,7 @@ public class CameraManager : MonoBehaviour
     {
         IsPanning = true;
         lastPos = Input.mousePosition;
+        CursorManager.Instance.Grab();
     }
 
     public void RequestZoom(float value)
@@ -140,7 +141,10 @@ public class CameraManager : MonoBehaviour
 
         //Stop the panning sequence
         if (Input.GetMouseButtonUp(0))
+        {
             IsPanning = false;
+            CursorManager.Instance.UnGrab();
+        }
     }
 
     private void FollowPlayerUpdate()

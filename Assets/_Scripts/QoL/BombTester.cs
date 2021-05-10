@@ -71,7 +71,7 @@ public static class BombTester
             {
                 res = true;
             }
-            else if (hit.transform.gameObject.layer == 8 || hit.transform.gameObject.layer == 3 || hit.transform.gameObject.layer == 6)
+            else if (hit.transform.gameObject.layer == 8 || hit.transform.gameObject.layer == 3 || hit.transform.gameObject.layer == 6 || hit.transform.gameObject.layer == 10)
             {
                 return false;
             }

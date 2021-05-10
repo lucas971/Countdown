@@ -9,6 +9,8 @@ public class CursorManager : MonoBehaviour
     [SerializeField] private CursorVisual CursorPrefab;
     [SerializeField] private Vector2 Offset;
     private CursorVisual cursor;
+
+    private bool grab = false;
     private void Awake()
     {
         GameObject[] objs = GameObject.FindGameObjectsWithTag("Cursor");
@@ -28,6 +30,8 @@ public class CursorManager : MonoBehaviour
 
     private void Update()
     {
+        if (grab)
+            return;
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         pos += Offset;
         cursor.transform.position = pos;
@@ -36,6 +40,16 @@ public class CursorManager : MonoBehaviour
     public void HideCursor()
     {
         cursor.gameObject.SetActive(false);
+    }
+
+    public void Grab()
+    {
+        grab = true;
+    }
+
+    public void UnGrab()
+    {
+        grab = false;
     }
 
     public void ShowCursor()
