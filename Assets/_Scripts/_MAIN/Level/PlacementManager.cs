@@ -172,20 +172,6 @@ public class PlacementManager : MonoBehaviour
             hit.collider.gameObject.TryGetComponent(out timer);
             if (timer) //If this is a timer, activate it
                 UseTimer(timer);
-
-            return;
-        }
-
-        else if (CameraManager.Instance.AllowPan())
-        {
-            //Check if the user clicked in an area of the screen allowing panning
-            Vector2 viewportClick = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-            if (viewportClick.x > .1f && viewportClick.x < .9f && viewportClick.y > .2f && viewportClick.y < .8f)
-            {
-                CameraManager.Instance.StartPanning();
-            }
-
-            return;
         }
        
     }

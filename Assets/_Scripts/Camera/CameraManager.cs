@@ -18,14 +18,12 @@ public class CameraManager : MonoBehaviour
     #region PRIVATE PARAMETERS
     //STATES
     private bool PanningAnimation = false;
-    private bool IsPanning = false;
     private bool IsZooming = false;
     private bool LockZoomUp = false;
     private bool FollowPlayer = false;
 
     //MOUSE
-    private Vector2 lastPos;
-    private Vector2 mouseMovement;
+    private Vector2 mousePos;
 
     //CAMERA BOUNDS
     private float cameraMinX;
@@ -52,7 +50,6 @@ public class CameraManager : MonoBehaviour
         if (CanPan)
         {
             player = GameObject.FindGameObjectWithTag("Player").transform;
-            IsPanning = true;
             PanningAnimation = true;
             StartCoroutine(PanAnimation());
         }
@@ -62,18 +59,7 @@ public class CameraManager : MonoBehaviour
     #region PUBLIC METHODS
     public bool OverrideInputs()
     {
-        return (IsPanning || IsZooming);
-    }
-    public bool AllowPan()
-    {
-        return CanPan;
-    }
-
-    public void StartPanning()
-    {
-        IsPanning = true;
-        lastPos = Input.mousePosition;
-        CursorManager.Instance.Grab();
+        return (IsZooming);
     }
 
     public void RequestZoom(float value)
@@ -112,10 +98,9 @@ public class CameraManager : MonoBehaviour
     #region UPDATE
     private void Update()
     {
-        if (IsPanning && !PanningAnimation)
-        {
-            PanningUpdate();
-        }
+        if (CanPan && !PanningAnimation)
+            CheckPanning();
+
         if (FollowPlayer)
         {
             FollowPlayerUpdate();
@@ -125,26 +110,25 @@ public class CameraManager : MonoBehaviour
     #endregion
 
     #region PANNING
-    private void PanningUpdate()
+    private void CheckPanning()
     {
-        //Get the mouse delta
-        mouseMovement = lastPos - (Vector2)Input.mousePosition;
-        lastPos = Input.mousePosition;
+        mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        if (mousePos.x > .9f)
+            PanningUpdate(Vector2.right);
+        else if (mousePos.x < .1f)
+            PanningUpdate(Vector2.left);
 
-        //If there is a movement
-        if (mouseMovement.magnitude > 0)
-        {
-            Camera.main.transform.position += (Vector3)mouseMovement * Time.deltaTime * _PanningSpeed;
-            CorrectCameraBounds();
-        }
-
-
-        //Stop the panning sequence
-        if (Input.GetMouseButtonUp(0))
-        {
-            IsPanning = false;
-            CursorManager.Instance.UnGrab();
-        }
+        if (mousePos.y > .9f)
+            PanningUpdate(Vector2.up);
+        else if (mousePos.y < .2f)
+            PanningUpdate(Vector2.down);
+    }
+    private void PanningUpdate(Vector3 dir)
+    {
+        
+        Camera.main.transform.position += dir * Time.deltaTime * _PanningSpeed;
+        CorrectCameraBounds();
+        
     }
 
     private void FollowPlayerUpdate()
@@ -152,6 +136,7 @@ public class CameraManager : MonoBehaviour
         Camera.main.transform.position = player.transform.position + Vector3.forward * Camera.main.transform.position.z;
         CorrectCameraBounds();
     }
+
     private IEnumerator PanAnimation()
     {
         Transform panTargets = transform.Find("PAN_ANIMATION");
@@ -160,7 +145,8 @@ public class CameraManager : MonoBehaviour
 
         Camera.main.transform.position = panTargets.GetChild(0).position + Vector3.forward * Camera.main.transform.position.z; ;
         CorrectCameraBounds();
-        
+
+        yield return new WaitForSeconds(.2f);
 
         for (int i = 1; i < panTargets.childCount; i++)
         {
@@ -179,7 +165,6 @@ public class CameraManager : MonoBehaviour
                 yield return null;
             }
         }
-        IsPanning = false;
         PanningAnimation = false;
     }
     #endregion

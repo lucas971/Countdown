@@ -6,7 +6,6 @@ public class Teleporter : MonoBehaviour
 {
     [SerializeField] private Teleporter To;
     [SerializeField] private float cooldown;
-    [SerializeField] private SpriteRenderer spriteRenderer;
 
     private bool inCooldown = false;
 
@@ -32,12 +31,8 @@ public class Teleporter : MonoBehaviour
     IEnumerator CooldownCoroutine()
     {
         inCooldown = true;
-        spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, .25f);
-
         yield return new WaitForSeconds(cooldown);
 
         inCooldown = false;
-        spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 1f);
-
     }
 }
