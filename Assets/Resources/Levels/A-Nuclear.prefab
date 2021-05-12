@@ -1189,6 +1189,7 @@ MonoBehaviour:
     y: 0
     width: 0
     height: 0
+  DesiredZoom: 8
 --- !u!1 &7481145833985000691
 GameObject:
   m_ObjectHideFlags: 0

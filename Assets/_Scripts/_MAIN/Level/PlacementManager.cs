@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlacementManager : MonoBehaviour
 {
     public static PlacementManager Instance;
-
     #region PRIVATE VARIABLES
     //BOMBS
     private List<Bomb> bombs;

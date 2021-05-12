@@ -13,6 +13,7 @@ public class CameraManager : MonoBehaviour
     [SerializeField] protected bool CanPan;
     [SerializeField] protected bool CanScale;
     [SerializeField] protected Rect Boundaries;
+    [SerializeField] protected int DesiredZoom = 8;
     #endregion
 
     #region PRIVATE PARAMETERS
@@ -47,6 +48,7 @@ public class CameraManager : MonoBehaviour
 
     private void Start()
     {
+        Camera.main.orthographicSize = DesiredZoom;
         if (CanPan)
         {
             player = GameObject.FindGameObjectWithTag("Player").transform;
