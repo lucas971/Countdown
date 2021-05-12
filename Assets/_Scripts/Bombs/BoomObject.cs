@@ -39,6 +39,10 @@ public class BoomObject : MonoBehaviour
     //STATES
     private bool started = false;
 
+    //RIGIDBODY
+    private float bounciness;
+    private float friction;
+
     #endregion
 
     #region INITIALIZATION
@@ -53,6 +57,8 @@ public class BoomObject : MonoBehaviour
     {
         initialPosition = transform.position;
         initialRotation = transform.rotation;
+        bounciness = rb.sharedMaterial.bounciness;
+        friction = rb.sharedMaterial.friction;
     }
     #endregion
 
@@ -164,6 +170,18 @@ public class BoomObject : MonoBehaviour
     public void Attractor(Vector2 attraction)
     {
         rb.AddForce(attraction);
+    }
+
+    public void StartSlip()
+    {
+        rb.sharedMaterial.friction = 0;
+        rb.sharedMaterial.bounciness = 0;
+    }
+
+    public void StopSlip()
+    {
+        rb.sharedMaterial.friction = friction;
+        rb.sharedMaterial.bounciness = bounciness;
     }
     #endregion
 

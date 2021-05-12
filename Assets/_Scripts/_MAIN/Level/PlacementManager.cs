@@ -10,6 +10,7 @@ public class PlacementManager : MonoBehaviour
     private List<Bomb> bombs;
     private List<Bomb> placedBombs;
     private List<BoomObject> boomObjects;
+    private List<MechanismTimer> timers;
     private LayerMask BombLayerMask;
     private Bomb currentBomb = null;
     private Vector2 gravityBackup;
@@ -36,6 +37,7 @@ public class PlacementManager : MonoBehaviour
         placedBombs = new List<Bomb>();
 
         boomObjects = new List<BoomObject>();
+        timers = new List<MechanismTimer>();
     }
 
     private void Start()
@@ -52,6 +54,10 @@ public class PlacementManager : MonoBehaviour
             boomObjects.Add(boomObject);
         }
 
+        foreach (MechanismTimer timer in FindObjectsOfType<MechanismTimer>())
+        {
+            timers.Add(timer);
+        }
         //Fill the UI horizontal layout with bombs icons.
         for (int i = 0; i < bombs.Count; i++)
             UIManager.Instance.LayoutAddBomb(i, bombs[i].Icon);
@@ -226,6 +232,10 @@ public class PlacementManager : MonoBehaviour
         foreach (BoomObject b in boomObjects)
             b.InitiateSequence();
 
+        //Initiate timer sequences
+        foreach (MechanismTimer t in timers)
+            t.InitiateSequence();
+
         //Replace the CLEAR button with the RETRY button
         UIManager.Instance.ShowRetryButton();
     }
@@ -239,9 +249,15 @@ public class PlacementManager : MonoBehaviour
         sequenceStarted = false;
 
         //Stop the Boom Objects
-        foreach (var boomObject in boomObjects)
+        foreach (BoomObject boomObject in boomObjects)
         {
             boomObject.Stop();
+        }
+
+        //Stop the timers
+        foreach (MechanismTimer t in timers)
+        {
+            t.Stop();
         }
 
         //Stop the Bombs
